@@ -52,12 +52,15 @@ export class ProductsController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() payload: UpdateProductDto) {
+  update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() payload: UpdateProductDto,
+  ) {
     return this.productsService.update(+id, payload);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
+  delete(@Param('id', ParseIntPipe) id: string) {
     return this.productsService.delete(+id);
   }
 }
