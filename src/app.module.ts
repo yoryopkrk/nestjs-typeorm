@@ -37,7 +37,7 @@ import config from './config';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
+    /* AppService,
     {
       provide: 'TASKS',
       useFactory: async () => {
@@ -48,7 +48,7 @@ import config from './config';
         return task.data;
       },
       inject: [HttpService],
-    },
+    }, */
   ],
 })
 export class AppModule {}

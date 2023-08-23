@@ -6,18 +6,21 @@ import {
   Column,
   ManyToOne,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
-import { Product } from '../../../products/products/entities/product.entity';
+import { Product } from '../products/product.entity';
 import { Order } from './order.entity';
 
-@Entity()
+@Entity({ name: 'order-items' })
 export class OrderItem {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Exclude()
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
+  @Exclude()
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 

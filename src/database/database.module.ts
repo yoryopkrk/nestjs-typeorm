@@ -3,6 +3,16 @@ import { Client } from 'pg';
 import { ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { Product } from './entities/products/product.entity';
+import { Brand } from './entities/products/brand.entity';
+import { Category } from './entities/products/category.entity';
+import { Customer } from './entities/users/customer.entity';
+import { OrderItem } from './entities/users/order-item.entity';
+import { Order } from './entities/users/order.entity';
+import { User } from './entities/users/user.entity';
+import { UserRepository } from './entities/users/user.repository';
+import { UsersServiceA } from './providers/user.service';
+
 import config from '../config';
 
 const API_KEY = '12345634';
@@ -27,29 +37,17 @@ const API_KEY_PROD = 'PROD1212121SA';
         };
       },
     }),
+    TypeOrmModule.forFeature([
+      Product,
+      Brand,
+      Category,
+      Customer,
+      OrderItem,
+      Order,
+      User,
+    ]),
   ],
-  providers: [
-    {
-      provide: 'API_KEY',
-      useValue: process.env.NODE_ENV === 'prod' ? API_KEY_PROD : API_KEY,
-    },
-    {
-      provide: 'PG',
-      useFactory: (configService: ConfigType<typeof config>) => {
-        const { user, host, dbName, password, port } = configService.postgres;
-        const client = new Client({
-          user,
-          host,
-          database: dbName,
-          password,
-          port,
-        });
-        client.connect();
-        return client;
-      },
-      inject: [config.KEY],
-    },
-  ],
-  exports: ['API_KEY', 'PG', TypeOrmModule],
+  //providers: [UsersServiceA],
+  exports: [TypeOrmModule],
 })
 export class DatabaseModule {}

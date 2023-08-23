@@ -1,13 +1,13 @@
 import { PrimaryGeneratedColumn, Column, Entity, Index, OneToOne, JoinColumn } from 'typeorm';
 
-import { Customer } from '../../../users/customers/entities/customer.entity';
+import { Customer } from './customer.entity';
 
 @Entity({ name: 'users' })
+@Index(['email','customer'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index({ unique: true })
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
@@ -18,6 +18,6 @@ export class User {
   role: string;
 
   @OneToOne(() => Customer, (customer) => customer.user, { nullable: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'customer_id' })
   customer: Customer;
 }

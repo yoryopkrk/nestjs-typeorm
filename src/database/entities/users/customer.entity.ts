@@ -4,14 +4,15 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable,
+  OneToOne,
+  OneToMany,
 } from 'typeorm';
 
-import { Product } from "../../products/entities/product.entity";
+import { User } from './user.entity';
+import { Order } from './order.entity';
 
-@Entity({ name: 'categories' })
-export class Category {
+@Entity({ name: 'customers' })
+export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,7 +20,10 @@ export class Category {
   name: string;
 
   @Column({ type: 'text' })
-  description: string;
+  lastName: string;
+
+  @Column({ type: 'varchar' })
+  phone: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
@@ -27,7 +31,9 @@ export class Category {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @ManyToMany(() => Product, (product) => product.categories)
-  @JoinTable()
-  products: Product[];
+  @OneToOne(() => User, (user) => user.customer, { nullable: true })
+  user: User;
+
+  @OneToMany(() => Order, (order) => order.customer)
+  orders: Order[];
 }
