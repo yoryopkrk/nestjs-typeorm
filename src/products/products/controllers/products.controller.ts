@@ -9,11 +9,13 @@ import {
   HttpStatus,
   HttpCode,
   ParseIntPipe,
+  BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 import { ProductsService } from 'src/products/products/services/products.service';
-import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
+import { CreateProductDto, FilterProductsDto, UpdateProductDto } from '../dtos/product.dto';
 
 @ApiTags('products')
 @Controller('products')
@@ -22,16 +24,9 @@ export class ProductsController {
 
   @Get()
   @ApiOperation({ summary: 'List of products' })
-  getAll() {
-    return this.productsService.findAll();
+  findAll(@Query() params?: FilterProductsDto) {
+    return this.productsService.findAll(params);
   }
-  // getAll(
-  //   @Query('limit') limit = 100,
-  //   @Query('offset') offset = 0,
-  //   @Query('brand') brand: string,
-  // ) {
-  //   return this.productsService.findAll();
-  // }
 
   @Get('filter')
   getFilter() {
@@ -48,7 +43,11 @@ export class ProductsController {
 
   @Post()
   create(@Body() payload: CreateProductDto) {
-    return this.productsService.create(payload);
+    try {
+      return this.productsService.create(payload);      
+    } catch (error) {
+      throw new BadRequestException(`${error.message || 'Unexpected Error'}'`);
+    }
   }
 
   @Put(':id')
@@ -59,8 +58,24 @@ export class ProductsController {
     return this.productsService.update(+id, payload);
   }
 
+  @Put(':id/category/:categoryId')
+  addCategoryToProduct(
+    @Param('id') id: number,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ) {
+    return this.productsService.addCategoryToProduct(id, categoryId);
+  }
+
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.productsService.delete(+id);
+  }
+
+  @Delete(':id/category/:categoryId')
+  deleteCategory(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ) {
+    return this.productsService.removeCategoryByProduct(id, categoryId);
   }
 }
