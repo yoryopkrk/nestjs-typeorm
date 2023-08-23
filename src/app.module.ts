@@ -23,6 +23,11 @@ import config from './config';
         DATABASE_NAME: Joi.string().required(),
         DATABASE_PORT: Joi.number().required(),
         VERSION: Joi.string().required(),
+        MYSQL_DATABASE: Joi.string().required(),
+        MYSQL_PORT: Joi.number().required(),
+        MYSQL_ROOT_PASSWORD: Joi.string().required(),
+        MYSQL_USER: Joi.string().required(),
+        MYSQL_HOST: Joi.string().required()
       }),
     }),
     UsersModule,
@@ -32,7 +37,7 @@ import config from './config';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
+    /* AppService,
     {
       provide: 'TASKS',
       useFactory: async () => {
@@ -43,7 +48,7 @@ import config from './config';
         return task.data;
       },
       inject: [HttpService],
-    },
+    }, */
   ],
 })
 export class AppModule {}

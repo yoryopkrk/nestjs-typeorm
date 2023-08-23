@@ -1,59 +1,49 @@
 import {
   Controller,
   Get,
-  Query,
   Param,
   Post,
   Body,
   Put,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
+import { OrdersService } from './../services/orders.service';
+import { CreateOrderDto, UpdateOrderDto } from './../dtos/order.dto';
+
+@ApiTags('orders')
 @Controller('orders')
 export class OrdersController {
+  constructor(private orderService: OrdersService) {}
+
   @Get()
-  getAll(
-    @Query('limit') limit = 100,
-    @Query('offset') offset = 0,
-    @Query('brand') brand: string,
-  ) {
-    return {
-      message: `orders limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
-    };
+  @ApiOperation({ summary: 'List of orders' })
+  findAll() {
+    return this.orderService.findAll();
   }
 
-  @Get('filter')
-  getFilter() {
-    return {
-      message: `yo soy un filter`,
-    };
+  @Get(':id')
+  get(@Param('id', ParseIntPipe) id: number) {
+    return this.orderService.findOne(id);
   }
 
-  @Get(':orderId')
-  getOne(@Param('orderId') orderId: string) {
-    return {
-      message: `order ${orderId}`,
-    };
-  }
-
-  @Post() // 👈 New decorator
-  create(@Body() payload: any) {
-    return {
-      message: 'accion de crear',
-      payload,
-    };
+  @Post()
+  create(@Body() payload: CreateOrderDto) {
+    return this.orderService.create(payload);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() payload: any) {
-    return {
-      id,
-      payload,
-    };
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateOrderDto,
+  ) {
+    return this.orderService.update(id, payload);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number) {
-    return id;
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.orderService.delete(+id);
   }
 }
