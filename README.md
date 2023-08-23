@@ -45,6 +45,12 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Running bd dev
+
+docker-compose up -d mariadb
+
+docker-compose up -d postgres
+
 ## Test
 
 ```bash
@@ -71,3 +77,13 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+###  Migrations  ###
+
+npm run migrations:create ./src/database/migrations/add-fields
+
+npm run migrations:generate ./src/database/migrations/add-fields
+
+npm run migrations:show
+
+npm run migrations:run

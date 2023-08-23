@@ -1,19 +1,16 @@
-import { IsString, IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
-import { PartialType } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, IsNumber, IsPositive, IsArray } from 'class-validator';
+import { PartialType, ApiProperty } from '@nestjs/swagger';
 
 export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({ description: `category's name` })
   readonly name: string;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({ description: `category's description` })
   readonly description: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  @IsPositive()
-  readonly type: number;
 }
 
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}
